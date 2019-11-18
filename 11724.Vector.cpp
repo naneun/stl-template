@@ -108,6 +108,7 @@ int main(void)
 	printf("%d", res);
 
 	free_graph(grp, n + 1);
+	free(grp);
 
 	return 0;
 }
