@@ -2,4 +2,4 @@
 
 1. Hash_Table
 2. Trie
-3. Heap
+3. Maximum_Heap
