@@ -4,3 +4,5 @@
 2. Trie
 3. Maximum_Heap
 4. Minimum_Heap
+5. Stack
+6. Queue
