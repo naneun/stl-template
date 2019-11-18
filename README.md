@@ -6,3 +6,4 @@
 4. Minimum_Heap
 5. Stack
 6. Queue
+7. Vector
