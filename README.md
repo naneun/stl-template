@@ -1,4 +1,5 @@
 # DataStructure
+### MyTemplate
 
 1. HashTable
 2. Trie
