@@ -1,9 +1,9 @@
-# Data_Structure
+# DataStructure
 
-1. Hash_Table
+1. HashTable
 2. Trie
-3. Maximum_Heap
-4. Minimum_Heap
+3. MaximumHeap
+4. MinimumHeap
 5. Stack
 6. Queue
 7. Vector
