@@ -9,11 +9,11 @@ const int HASH_TABLE_SIZE = 1000'000 + 5;
 struct HASH_TABLE {
 
 private:
-	
+
 	string value[HASH_TABLE_SIZE];
 
 public:
-	
+
 	ull generate_hash_value(string str) {
 		ull hash_value = 5381;
 		for (int i = 0; str[i]; ++i) {
