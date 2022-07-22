@@ -6,7 +6,7 @@ typedef unsigned long long ull;
 
 const int HASH_TABLE_SIZE = 1000'000 + 5;
 
-struct HASH_TABLE {
+struct HashTable {
 
 private:
 
@@ -47,7 +47,7 @@ public:
 	}
 };
 
-HASH_TABLE hash_table;
+HashTable hash_table;
 
 int main()
 {
@@ -58,7 +58,6 @@ int main()
 	cin >> n >> m;
 
 	string s;
-
 	while (n--) {
 		cin >> s;
 		hash_table.put(s);
