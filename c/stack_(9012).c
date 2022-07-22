@@ -7,6 +7,7 @@
 struct _Stack {
 
 	int top;
+
 	char* buffer;
 };
 

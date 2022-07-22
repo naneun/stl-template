@@ -64,9 +64,9 @@ int main()
 	}
 
 	while (size(queue) > 1) {
-			pop(queue);
-			push(queue, front(queue));
-			pop(queue);
+		pop(queue);
+		push(queue, front(queue));
+		pop(queue);
 	}
 
 	printf("%d", front(queue));
