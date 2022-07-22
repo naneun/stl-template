@@ -96,20 +96,19 @@ Element find(const char* str) {
 	return hash_table.element[HASH_TABLE_SIZE];
 }
 
-int seq;
-int parent[HASH_TABLE_SIZE];
-int set_size[HASH_TABLE_SIZE];
+int seq, parent[HASH_TABLE_SIZE];
 
 void init_set() {
 	seq = 0;
-	for (int i = 1; i < HASH_TABLE_SIZE; ++i) {
-		parent[i] = i;
-		set_size[i] = 1;
+
+	int i;
+	for (i = 1; i < HASH_TABLE_SIZE; ++i) {
+		parent[i] = -1;
 	}
 }
 
 int find_root(int x) {
-	if (parent[x] == x) {
+	if (parent[x] < 0) {
 		return x;
 	}
 	return parent[x] = find_root(parent[x]);
@@ -119,8 +118,8 @@ void merge(int x, int y) {
 	if (x > y) {
 		swap(x, y);
 	}
+	parent[x] += parent[y];
 	parent[y] = x;
-	set_size[x] += set_size[y];
 }
 
 int main()
@@ -157,7 +156,7 @@ int main()
 				merge(u, v);
 			}
 
-			printf("%d\n", set_size[u]);
+			printf("%d\n", -parent[u]);
 		}
 	}
 }

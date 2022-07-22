@@ -12,12 +12,12 @@ public:
 
 	string value;
 	int index;
-	
+
 	Element() {
 		value = "";
 		index = 0;
 	}
-	
+
 	Element(string value, int index) : value(value), index(index) {}
 
 	bool operator == (const Element& obj) const {
@@ -30,7 +30,7 @@ Element NULL_ELEMENT;
 struct HashTable {
 
 private:
-	
+
 	Element element[HASH_TABLE_SIZE];
 
 public:
@@ -38,7 +38,7 @@ public:
 	HashTable() {
 
 	}
-	
+
 	ull generate_hash_value(string str) {
 		ull hash_value = 5381;
 		for (int i = 0; str[i]; ++i) {
@@ -74,20 +74,19 @@ public:
 
 HashTable hash_table;
 
-int seq;
-int parent[HASH_TABLE_SIZE];
-int set_size[HASH_TABLE_SIZE];
+int seq, parent[HASH_TABLE_SIZE];
 
 void init_set() {
 	seq = 0;
-	for (int i = 1; i < HASH_TABLE_SIZE; ++i) {
-		parent[i] = i;
-		set_size[i] = 1;
+
+	int i;
+	for (i = 1; i < HASH_TABLE_SIZE; ++i) {
+		parent[i] = -1;
 	}
 }
 
 int find_root(int x) {
-	if (parent[x] == x) {
+	if (parent[x] < 0) {
 		return x;
 	}
 	return parent[x] = find_root(parent[x]);
@@ -97,8 +96,8 @@ void merge(int x, int y) {
 	if (x > y) {
 		swap(x, y);
 	}
+	parent[x] += parent[y];
 	parent[y] = x;
-	set_size[x] += set_size[y];
 }
 
 int main()
@@ -136,7 +135,7 @@ int main()
 				merge(u, v);
 			}
 
-			cout << set_size[u] << '\n';
+			cout << -parent[u] << '\n';
 		}
 	}
 }
