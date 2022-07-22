@@ -75,9 +75,7 @@ public:
 HashTable hash_table;
 
 int seq;
-
 int parent[HASH_TABLE_SIZE];
-
 int set_size[HASH_TABLE_SIZE];
 
 void init_set() {
@@ -88,11 +86,11 @@ void init_set() {
 	}
 }
 
-int find(int x) {
+int find_root(int x) {
 	if (parent[x] == x) {
 		return x;
 	}
-	return parent[x] = find(parent[x]);
+	return parent[x] = find_root(parent[x]);
 }
 
 void merge(int x, int y) {
@@ -127,8 +125,8 @@ int main()
 			Element e1 = hash_table.find(s);
 			Element e2 = hash_table.find(t);
 
-			int u = find(e1.index);
-			int v = find(e2.index);
+			int u = find_root(e1.index);
+			int v = find_root(e2.index);
 
 			if (u > v) {
 				swap(u, v);

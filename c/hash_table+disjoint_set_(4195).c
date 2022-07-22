@@ -1,129 +1,163 @@
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #define swap(a, b) { int t = (a); (a) = (b); (b) = t; }
 
-#define TABLE_SIZE 100000 + 5
-#define STRING_LENGTH 500 + 5
+#define TRUE	1
+#define FALSE	0
 
-#define true 1
-#define false 0
-
-/* string function */
-
-int strcmp(const char* s1, const char* s2) {
-	int i;
-	for (i = 0; s1[i] || s2[i]; ++i) if (s1[i] != s2[i]) {
-		return s1[i] < s2[i] ? -1 : 1;
-	}
-	return 0;
-}
-
-void strcpy(char* des, const char* src) {
-	int i;
-	for (i = 0; src[i]; ++i) des[i] = src[i];
-	des[i] = '\0';
-}
-
-/* hash table */
-
-typedef struct _HASH_TABLE HASH_TABLE;
-
-struct _HASH_TABLE {
-	char key[STRING_LENGTH];
-	int group_id;
-};
-
-HASH_TABLE hb[TABLE_SIZE];
+#define HASH_TABLE_SIZE	(1000000 + 5)
+#define STRING_LENGTH	(20 + 5)
 
 typedef unsigned long long ull;
 
-ull get_hash_value(const char* str) {
-	ull hash = 5381;
+int strcmp(const char* s1, const char* s2) {
+	int i;
+	for (i = 0; s1[i] || s2[i]; ++i) {
+		if (s1[i] != s2[i]) {
+			return s1[i] < s2[i] ? -1 : 1;
+		}
+	}
+	return 0;
+}
+
+void strcpy(char* s1, const char* s2) {
+	int i;
+	for (i = 0; s2[i]; ++i) {
+		s1[i] = s2[i];
+	}
+	s1[i] = 0;
+}
+
+struct _Element {
+
+	char* value;
+	int index;
+};
+
+typedef struct _Element Element;
+
+struct _HashTable {
+
+	Element* element;
+};
+
+typedef struct _HashTable HashTable;
+
+HashTable hash_table;
+
+void resize_hash_table() {
+	hash_table.element = (Element*)malloc(sizeof(Element) * (HASH_TABLE_SIZE + 1));
+	hash_table.element[HASH_TABLE_SIZE].value = NULL;
+	hash_table.element[HASH_TABLE_SIZE].index = -1;
+
+	int i;
+	for (i = 0; i < HASH_TABLE_SIZE; ++i) {
+		hash_table.element[i].value = (char*)malloc(sizeof(char) * STRING_LENGTH);
+		hash_table.element[i].value[0] = 0;
+	}
+}
+
+ull generate_hash_value(const char* str) {
+	ull hash_value = 5381;
 	int i;
 	for (i = 0; str[i]; ++i) {
-		hash = (((hash << 5) + hash) + str[i]) % TABLE_SIZE;
+		hash_value = (((hash_value << 5) + hash_value) + str[i]) % HASH_TABLE_SIZE;
 	}
-	return hash % TABLE_SIZE;
+	return hash_value;
 }
 
-typedef int boolean;
-
-boolean get_data(const char* str) {
-	ull hash_value = get_hash_value(str);
-	int c = TABLE_SIZE;
-	while (hb[hash_value].key[0] != 0 && c--) {
-		if (!strcmp(hb[hash_value].key, str)) return hb[hash_value].group_id;
-		hash_value = (hash_value + 1) % TABLE_SIZE;
-	}
-	return false;
+void put_element(const ull hash_value, const char* str, const int seq) {
+	strcpy(hash_table.element[hash_value].value, str);
+	hash_table.element[hash_value].index = seq;
 }
 
-boolean insert(const char* str, int id) {
-	ull hash_value = get_hash_value(str);
-	int c = TABLE_SIZE;
-	while (hb[hash_value].key[0] != 0 && c--) {
-		if (!strcmp(hb[hash_value].key, str)) return false;
-		hash_value = (hash_value + 1) % TABLE_SIZE;
+void put(const char* str, int seq) {
+	ull hash_value = generate_hash_value(str);
+	int count = HASH_TABLE_SIZE;
+	while (hash_table.element[hash_value].value[0] && count--) {
+		if (!strcmp(hash_table.element[hash_value].value, str)) {
+			return;
+		}
+		hash_value = (hash_value + 1) % HASH_TABLE_SIZE;
 	}
-	strcpy(hb[hash_value].key, str);
-	hb[hash_value].group_id = id;
-	return true;
+	put_element(hash_value, str, seq);
 }
 
-/* union find */
+Element find(const char* str) {
+	ull hash_value = generate_hash_value(str);
+	int count = HASH_TABLE_SIZE;
+	while (hash_table.element[hash_value].value[0] && count--) {
+		if (!strcmp(hash_table.element[hash_value].value, str)) {
+			return hash_table.element[hash_value];
+		}
+		hash_value = (hash_value + 1) % HASH_TABLE_SIZE;
+	}
+	return hash_table.element[HASH_TABLE_SIZE];
+}
 
-int parent[TABLE_SIZE], size[TABLE_SIZE], id;
+int seq;
+int parent[HASH_TABLE_SIZE];
+int set_size[HASH_TABLE_SIZE];
 
-void init() {
-	int i;
-	for (i = 1; i < TABLE_SIZE; ++i) {
+void init_set() {
+	seq = 0;
+	for (int i = 1; i < HASH_TABLE_SIZE; ++i) {
 		parent[i] = i;
-		size[i] = 1;
+		set_size[i] = 1;
 	}
-	id = 1;
 }
 
-int find(int x) {
-	if (x == parent[x]) return x;
-	return parent[x] = find(parent[x]);
+int find_root(int x) {
+	if (parent[x] == x) {
+		return x;
+	}
+	return parent[x] = find_root(parent[x]);
 }
 
 void merge(int x, int y) {
+	if (x > y) {
+		swap(x, y);
+	}
 	parent[y] = x;
-	size[x] += size[y];
+	set_size[x] += set_size[y];
 }
 
-int main(void)
+int main()
 {
-	int i, j, k, tc, test_case, n;
+	resize_hash_table();
 
-	char s1[STRING_LENGTH], s2[STRING_LENGTH];
-
+	int tc;
 	scanf("%d", &tc);
-
-	for (test_case = 0; test_case < tc; ++test_case) {
+	while (tc--) {
+		int n;
 		scanf("%d", &n);
+		init_set();
+		while (n--) {
+			char s[STRING_LENGTH], t[STRING_LENGTH];
+			scanf("%s %s", s, t);
+			if (find(s).value == NULL) {
+				put(s, ++seq);
+			}
+			if (find(t).value == NULL) {
+				put(t, ++seq);
+			}
 
-		init();
+			Element e1 = find(s);
+			Element e2 = find(t);
 
-		for (i = 0; i < n; ++i) {
-			scanf("%s %s", s1, s2);
-			if (!get_data(s1)) insert(s1, id++);
-			if (!get_data(s2)) insert(s2, id++);
+			int u = find_root(e1.index);
+			int v = find_root(e2.index);
 
-			j = get_data(s1);
-			k = get_data(s2);
+			if (u > v) {
+				swap(u, v);
+			}
 
-			j = find(j), k = find(k);
+			if (u != v) {
+				merge(u, v);
+			}
 
-			if (j > k) swap(j, k);
-
-			if (j != k) merge(j, k);
-			
-			printf("%d\n", size[j]);
+			printf("%d\n", set_size[u]);
 		}
 	}
-
-	return 0;
 }
