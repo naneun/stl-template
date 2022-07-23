@@ -13,8 +13,42 @@ struct _Trie {
 	int end;
 };
 
-Trie* create_trie() {
+Trie* create_trie();
+void delete_trie(Trie* trie);
 
+int insert(Trie* trie, const char* str);
+
+int find(Trie* trie, const char* str);
+
+char str[10000 + 5][10 + 5];
+
+int main()
+{
+	int tc;
+	scanf("%d", &tc);
+	while (tc--) {
+		Trie* trie = create_trie();
+
+		int n;
+		scanf("%d", &n);
+
+		int i;
+		for (i = 0; i < n; ++i) {
+			scanf("%s", str[i]);
+			insert(trie, str[i]);
+		}
+
+		int ans = TRUE;
+		for (i = 0; i < n; ++i) {
+			ans &= find(trie, str[i]);
+		}
+		printf("%s\n", ans ? "YES" : "NO");
+
+		delete_trie(trie);
+	}
+}
+
+Trie* create_trie() {
 	Trie* trie = (Trie*)malloc(sizeof(Trie));
 	memset(trie, 0, sizeof(Trie));
 
@@ -22,7 +56,6 @@ Trie* create_trie() {
 }
 
 void delete_trie(Trie* trie) {
-
 	int i;
 	for (i = 0; i < 10; ++i) {
 		if (trie->next[i]) {
@@ -56,32 +89,4 @@ int find(Trie* trie, const char* str) {
 	}
 
 	return find(trie->next[*str - '0'], str + 1);
-}
-
-char str[10000 + 5][10 + 5];
-
-int main()
-{
-	int tc;
-	scanf("%d", &tc);
-	while (tc--) {
-		Trie* trie = create_trie();
-
-		int n;
-		scanf("%d", &n);
-
-		int i;
-		for (i = 0; i < n; ++i) {
-			scanf("%s", str[i]);
-			insert(trie, str[i]);
-		}
-
-		int ans = TRUE;
-		for (i = 0; i < n; ++i) {
-			ans &= find(trie, str[i]);
-		}
-		printf("%s\n", ans ? "YES" : "NO");
-
-		delete_trie(trie);
-	}
 }

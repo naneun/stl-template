@@ -83,6 +83,7 @@ void resize_vector(Vector* vector) {
 void delete_vector(Vector* vector) {
 	free(vector->buffer);
 	free(vector);
+	*(&vector) = NULL;
 }
 
 int size(Vector* vector) {
@@ -127,6 +128,7 @@ void delete_graph(Graph* graph) {
 		delete_vector(*(graph->nodes + i));
 	}
 	free(graph);
+	*(&graph) = NULL;
 }
 
 void dfs(Graph* graph, int cur) {

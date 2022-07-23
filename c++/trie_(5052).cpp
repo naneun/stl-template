@@ -13,7 +13,6 @@ private:
 public:
 
 	Trie() {
-
 		int i;
 		for (i = 0; i < 10; ++i) {
 			next[i] = NULL;
@@ -22,7 +21,6 @@ public:
 	}
 
 	void delete_trie() {
-
 		int i;
 		for (i = 0; i < 10; ++i) {
 			if (next[i]) {
