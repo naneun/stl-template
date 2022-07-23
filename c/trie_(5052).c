@@ -51,7 +51,6 @@ int main()
 Trie* create_trie() {
 	Trie* trie = (Trie*)malloc(sizeof(Trie));
 	memset(trie, 0, sizeof(Trie));
-
 	return trie;
 }
 
