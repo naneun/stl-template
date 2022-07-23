@@ -37,9 +37,9 @@ struct _Graph {
 Graph* create_graph();
 void delete_graph(Graph* graph);
 
-void dfs(Graph* graph, int cur);
-
 int visited[NODE_COUNT];
+
+void dfs(Graph* graph, int cur);
 
 int main()
 {
