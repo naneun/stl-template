@@ -1,114 +1,126 @@
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
-#define true 1
-#define false 0
+#define TRUE 1
 
-#define VERTEX_COUNT 10000 + 5
+#define NODE_COUNT (10000 + 5)
 
-/* VECTOR */
+struct _Vector {
 
-typedef struct _VECTOR VECTOR;
-
-struct _VECTOR {
-	int count;
+	int size;
 	int capacity;
-	int* ary;
+
+	int* buffer;
 };
 
-VECTOR** grp;
+typedef struct _Vector Vector;
 
-VECTOR* alloc_vector() {
-	VECTOR* vp = (VECTOR*)malloc(sizeof(VECTOR));
-	vp->count = 0;
-	vp->capacity = 32;
-	vp->ary = (int*)malloc(sizeof(int) * vp->capacity);
-	return vp;
+Vector* create_vector() {
+	Vector* vector = (Vector*)malloc(sizeof(Vector));
+	vector->size = 0;
+	vector->capacity = 1 << 4;
+	vector->buffer = (int*)malloc(sizeof(int) * vector->capacity);
+	return vector;
 }
 
-void free_vector(VECTOR* v) {
-	free(v->ary);
-	v->ary = NULL;
+void resize_vector(Vector* vector) {
+	vector->capacity <<= 1;
+	vector->buffer = (int*)realloc(vector->buffer, sizeof(int) * vector->capacity);
 }
 
-void clear_vector(VECTOR* v) {
-	free(v->ary);
-	v->count = 0;
-	v->capacity = 32;
-	v->ary = (int*)malloc(sizeof(int) * v->capacity);
+void delete_vector(Vector* vector) {
+	free(vector->buffer);
+	free(vector);
 }
 
-VECTOR** resize(int size) {
-	VECTOR** vvp = (VECTOR**)malloc(sizeof(VECTOR*) * size);
-	int i;
-	for (i = 1; i < size; ++i) vvp[i] = alloc_vector();
-	return vvp;
+int size(Vector* vector) {
+	return vector->size;
 }
 
-void clear_graph(VECTOR** vv) {
-	int i;
-	for (i = 1; i < VERTEX_COUNT; ++i) {
-		clear_vector(vv[i]);
+int empty(Vector* vector) {
+	return !vector->size;
+}
+
+int full(Vector* vector) {
+	return vector->size == vector->capacity;
+}
+
+void emplace_back(Vector* vector, int value) {
+	if (full(vector)) {
+		resize_vector(vector);
 	}
+	vector->buffer[(vector->size)++] = value;
 }
 
-void free_graph(VECTOR** vv, int size) {
+void pop_back(Vector* vector) {
+	if (empty(vector)) {
+		return;
+	}
+	--(vector->size);
+}
+
+struct _Graph {
+
+	Vector** nodes;
+};
+
+typedef struct _Graph Graph;
+
+Graph* create_graph() {
+	Graph* graph = (Graph*)malloc(sizeof(Graph));
+	graph->nodes = (Vector**)malloc(sizeof(Vector) * NODE_COUNT);
 	int i;
-	for (i = 1; i < size; ++i) if (vv[i] != NULL) {
-		free_vector(vv[i]);
-		*(vv + i) = NULL;
+	for (i = 0; i < NODE_COUNT; ++i) {
+		*(graph->nodes + i) = create_vector();
 	}
+	return graph;
 }
 
-void push_back(VECTOR* v, int value) {
-	if (v->count == v->capacity) {
-		v->capacity <<= 1;
-		v->ary = (int*)realloc(v->ary, sizeof(int) * v->capacity);
+void delete_graph(Graph* graph) {
+	int i;
+	for (i = 0; i < NODE_COUNT; ++i) {
+		delete_vector(*(graph->nodes + i));
 	}
-	v->ary[v->count++] = value;
+	free(graph);
 }
 
-void pop_back(VECTOR* v) { v->count -= 1; }
+int visited[NODE_COUNT];
 
-int size(VECTOR* v) { return v->count; }
-
-int vis[VERTEX_COUNT];
-
-typedef int boolean;
-
-boolean dfs(int cur) {
-	vis[cur] = true;
-	int i, v_siz = size(grp[cur]), next;
-	for (i = 0; i < v_siz; ++i) {
-		next = grp[cur]->ary[i];
-		if (!vis[next]) {
-			dfs(next);
+void dfs(Graph* graph, int cur) {
+	visited[cur] = TRUE;
+	Vector* node = graph->nodes[cur];
+	int adj_count = node->size;
+	int i;
+	for (i = 0; i < adj_count; ++i) {
+		int next = node->buffer[i];
+		if (!visited[next]) {
+			dfs(graph, next);
 		}
 	}
-	return true;
 }
 
-int main(void)
-{	
-	int i, n, m, a, b, res = 0;
+int main()
+{
+	int n, m;
 	scanf("%d %d", &n, &m);
 
-	grp = resize(n + 1);
+	Graph* graph = create_graph();
 
+	int i;
 	for (i = 0; i < m; ++i) {
-		scanf("%d %d", &a, &b);
-		push_back(grp[a], b);
-		push_back(grp[b], a);
+		int u, v;
+		scanf("%d %d", &u, &v);
+		emplace_back(graph->nodes[u], v);
+		emplace_back(graph->nodes[v], u);
 	}
 
-	for (i = 1; i <= n; ++i) if (!vis[i]) {
-		res += dfs(i);
+	int ans = 0;
+	for (i = 1; i <= n; ++i) {
+		ans += !visited[i];
+		dfs(graph, i);
 	}
 
-	printf("%d", res);
+	printf("%d", ans);
 
-	free_graph(grp, n + 1);
-	free(grp);
-
-	return 0;
+	delete_graph(graph);
 }
