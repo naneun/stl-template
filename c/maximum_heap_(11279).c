@@ -3,6 +3,8 @@
 
 #define HEAP_SIZE (100000 + 5)
 
+typedef struct _Heap Heap;
+
 struct _Heap {
 
 	int count;
@@ -10,7 +12,35 @@ struct _Heap {
 	int* buffer;
 };
 
-typedef struct _Heap Heap;
+Heap* create_heap();
+void delete_heap(Heap* heap);
+
+int empty(Heap* heap);
+
+int top(Heap* heap);
+
+void push(Heap* heap, int value);
+int pop(Heap* heap);
+
+int main()
+{
+	Heap* heap = create_heap();
+
+	int n;
+	scanf("%d", &n);
+	while (n--) {
+		int x;
+		scanf("%d", &x);
+		if (!x) {
+			printf("%d\n", pop(heap));
+		}
+		else {
+			push(heap, x);
+		}
+	}
+
+	delete_heap(heap);
+}
 
 Heap* create_heap() {
 	Heap* heap = (Heap*)malloc(sizeof(Heap));
@@ -65,24 +95,4 @@ int pop(Heap* heap) {
 		heap->buffer[parent] = last_pushed_value;
 	}
 	return ret;
-}
-
-int main()
-{
-	Heap* heap = create_heap();
-
-	int n;
-	scanf("%d", &n);
-	while (n--) {
-		int x;
-		scanf("%d", &x);
-		if (!x) {
-			printf("%d\n", pop(heap));
-		}
-		else {
-			push(heap, x);
-		}
-	}
-
-	delete_heap(heap);
 }

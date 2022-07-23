@@ -3,6 +3,8 @@
 
 #define BUFFER_SIZE (500000 + 5)
 
+typedef struct _Queue Queue;
+
 struct _Queue {
 
 	int front;
@@ -11,13 +13,52 @@ struct _Queue {
 	int* buffer;
 };
 
-typedef struct _Queue Queue;
+Queue* create_queue();
+void delete_queue(Queue* queue);
+
+int empty(Queue* queue);
+int full(Queue* queue);
+
+int size(Queue* queue);
+int front(Queue* queue);
+
+void push(Queue* queue, int value);
+void pop(Queue* queue);
+
+int main()
+{
+	int n;
+	scanf("%d", &n);
+
+	Queue* queue = create_queue();
+
+	int i;
+	for (i = 1; i <= n; ++i) {
+		push(queue, i);
+	}
+
+	while (size(queue) > 1) {
+		pop(queue);
+		push(queue, front(queue));
+		pop(queue);
+	}
+
+	printf("%d", front(queue));
+
+	delete_queue(queue);
+}
 
 Queue* create_queue() {
 	Queue* queue = (Queue*)malloc(sizeof(Queue));
 	queue->front = queue->back = 0;
 	queue->buffer = (int*)malloc(sizeof(int) * BUFFER_SIZE);
 	return queue;
+}
+
+void delete_queue(Queue* queue) {
+	free(queue->buffer);
+	free(queue);
+	*(&queue) = NULL;
 }
 
 int empty(Queue* queue) {
@@ -49,25 +90,4 @@ void pop(Queue* queue) {
 		return;
 	}
 	queue->front = (queue->front + 1) % BUFFER_SIZE;
-}
-
-int main()
-{
-	int n;
-	scanf("%d", &n);
-
-	Queue* queue = create_queue();
-	
-	int i;
-	for (i = 1; i <= n; ++i) {
-		push(queue, i);
-	}
-
-	while (size(queue) > 1) {
-		pop(queue);
-		push(queue, front(queue));
-		pop(queue);
-	}
-
-	printf("%d", front(queue));
 }

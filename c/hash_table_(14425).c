@@ -1,13 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TRUE	1
-#define FALSE	0
+#define TRUE 1
+#define FALSE 0
 
-#define HASH_TABLE_SIZE	1'000'000 + 5
-#define STRING_LENGTH	500 + 5
+#define HASH_TABLE_SIZE (1000000 + 5)
+#define STRING_LENGTH (500 + 5)
 
 typedef unsigned long long ull;
+
+int strcmp(const char* s1, const char* s2);
+void strcpy(char* s1, const char* s2);
+
+typedef struct _HashTable HashTable;
+
+struct _HashTable {
+
+	char* value[HASH_TABLE_SIZE];
+};
+
+HashTable hash_table;
+
+void init_hash_table();
+
+ull generate_hash_value(const char* str);
+
+void put(const char* str);
+
+int find(const char* str);
+
+int main()
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	init_hash_table();
+
+	char s[STRING_LENGTH];
+	while (n--) {
+		scanf("%s", s);
+		put(s);
+	}
+
+	int ans = 0;
+	while (m--) {
+		scanf("%s", s);
+		ans += find(s);
+	}
+	printf("%d", ans);
+}
 
 int strcmp(const char* s1, const char* s2) {
 	int i;
@@ -27,16 +68,7 @@ void strcpy(char* s1, const char* s2) {
 	s1[i] = 0;
 }
 
-struct _HashTable {
-
-	char* value[HASH_TABLE_SIZE];
-};
-
-typedef struct _HashTable HashTable;
-
-HashTable hash_table;
-
-void resize_hash_table() {
+void init_hash_table() {
 	int i;
 	for (i = 0; i < HASH_TABLE_SIZE; ++i) {
 		hash_table.value[i] = (char*)malloc(sizeof(char) * STRING_LENGTH);
@@ -75,25 +107,4 @@ int find(const char* str) {
 		hash_value = (hash_value + 1) % HASH_TABLE_SIZE;
 	}
 	return FALSE;
-}
-
-int main()
-{
-	int n, m;
-	scanf("%d %d", &n, &m);
-
-	resize_hash_table();
-
-	char s[STRING_LENGTH];
-	while (n--) {
-		scanf("%s", s);
-		put(s);
-	}
-
-	int ans = 0;
-	while (m--) {
-		scanf("%s", s);
-		ans += find(s);
-	}
-	printf("%d", ans);
 }

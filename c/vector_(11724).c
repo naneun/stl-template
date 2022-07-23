@@ -5,6 +5,8 @@
 
 #define NODE_COUNT (10000 + 5)
 
+typedef struct _Vector Vector;
+
 struct _Vector {
 
 	int size;
@@ -13,7 +15,57 @@ struct _Vector {
 	int* buffer;
 };
 
-typedef struct _Vector Vector;
+Vector* create_vector();
+void resize_vector(Vector* vector);
+void delete_vector(Vector* vector);
+
+int empty(Vector* vector);
+int full(Vector* vector);
+
+int size(Vector* vector);
+
+void emplace_back(Vector* vector, int value);
+void pop_back(Vector* vector);
+
+typedef struct _Graph Graph;
+
+struct _Graph {
+
+	Vector** nodes;
+};
+
+Graph* create_graph();
+void delete_graph(Graph* graph);
+
+void dfs(Graph* graph, int cur);
+
+int visited[NODE_COUNT];
+
+int main()
+{
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	Graph* graph = create_graph();
+
+	int i;
+	for (i = 0; i < m; ++i) {
+		int u, v;
+		scanf("%d %d", &u, &v);
+		emplace_back(graph->nodes[u], v);
+		emplace_back(graph->nodes[v], u);
+	}
+
+	int ans = 0;
+	for (i = 1; i <= n; ++i) {
+		ans += !visited[i];
+		dfs(graph, i);
+	}
+
+	printf("%d", ans);
+
+	delete_graph(graph);
+}
 
 Vector* create_vector() {
 	Vector* vector = (Vector*)malloc(sizeof(Vector));
@@ -59,13 +111,6 @@ void pop_back(Vector* vector) {
 	--(vector->size);
 }
 
-struct _Graph {
-
-	Vector** nodes;
-};
-
-typedef struct _Graph Graph;
-
 Graph* create_graph() {
 	Graph* graph = (Graph*)malloc(sizeof(Graph));
 	graph->nodes = (Vector**)malloc(sizeof(Vector) * NODE_COUNT);
@@ -84,8 +129,6 @@ void delete_graph(Graph* graph) {
 	free(graph);
 }
 
-int visited[NODE_COUNT];
-
 void dfs(Graph* graph, int cur) {
 	visited[cur] = TRUE;
 	Vector* node = graph->nodes[cur];
@@ -97,30 +140,4 @@ void dfs(Graph* graph, int cur) {
 			dfs(graph, next);
 		}
 	}
-}
-
-int main()
-{
-	int n, m;
-	scanf("%d %d", &n, &m);
-
-	Graph* graph = create_graph();
-
-	int i;
-	for (i = 0; i < m; ++i) {
-		int u, v;
-		scanf("%d %d", &u, &v);
-		emplace_back(graph->nodes[u], v);
-		emplace_back(graph->nodes[v], u);
-	}
-
-	int ans = 0;
-	for (i = 1; i <= n; ++i) {
-		ans += !visited[i];
-		dfs(graph, i);
-	}
-
-	printf("%d", ans);
-
-	delete_graph(graph);
 }
