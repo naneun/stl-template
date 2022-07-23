@@ -4,13 +4,25 @@ using namespace std;
 
 const int HEAP_SIZE = 100'000 + 5;
 
-struct HEAP {
+struct Heap {
 
 private:
+
 	int count;
-	int buffer[HEAP_SIZE];
+	
+	int* buffer;
 
 public:
+
+	Heap() {
+		count = 0;
+		buffer = new int[HEAP_SIZE];
+	}
+
+	~Heap() {
+		delete(buffer);
+	}
+
 	bool empty() {
 		return count == 0;
 	}
@@ -59,7 +71,7 @@ int main()
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-	HEAP* heap = new HEAP();
+	Heap* heap = new Heap();
 
 	int n;
 	cin >> n;
@@ -73,4 +85,6 @@ int main()
 			heap->push(x);
 		}
 	}
+
+	delete(heap);
 }

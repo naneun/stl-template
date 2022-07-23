@@ -1,66 +1,88 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#define HEAP_SIZE 100000 + 5
+#define HEAP_SIZE (100000 + 5)
 
-typedef struct _HEAP HEAP;
+struct _Heap {
 
-struct _HEAP {
 	int count;
-	int ary[HEAP_SIZE];
+
+	int* buffer;
 };
 
-HEAP hp;
+typedef struct _Heap Heap;
 
-void init() { hp.count = 0; }
+Heap* create_heap() {
+	Heap* heap = (Heap*)malloc(sizeof(Heap));
+	heap->count = 0;
+	heap->buffer = (int*)malloc(sizeof(int) * HEAP_SIZE);
+	return heap;
+}
 
-int size() { return hp.count; }
+void delete_heap(Heap* heap) {
+	free(heap->buffer);
+	free(heap);
+	*(&heap) = NULL;
+}
 
-typedef int boolean;
+int empty(Heap* heap) {
+	return heap->count == 0;
+}
 
-boolean empty() { return hp.count == 0; }
-
-int top() {
+int top(Heap* heap) {
 	int ret = 0;
-	if (!empty()) ret = hp.ary[1];
+	if (!empty(heap)) {
+		return heap->buffer[1];
+	}
 	return ret;
 }
 
-void push(int value) {
-	int cur = ++hp.count;
-	while (cur != 1 && value < hp.ary[cur >> 1]) {
-		hp.ary[cur] = hp.ary[cur >> 1];
+void push(Heap* heap, int value) {
+	int cur = ++(heap->count);
+	while (cur != 1 && value < heap->buffer[cur >> 1]) {
+		heap->buffer[cur] = heap->buffer[cur >> 1];
 		cur >>= 1;
 	}
-	hp.ary[cur] = value;
+	heap->buffer[cur] = value;
 }
 
-int pop() {
+int pop(Heap* heap) {
 	int ret = 0;
-	if (!empty()) {
-		ret = hp.ary[1];
-		int parent = 1, child = 2, last_data = hp.ary[hp.count--];
-		while (child <= hp.count) {
-			if (child < hp.count && hp.ary[child] > hp.ary[child + 1]) child += 1;
-			if (hp.ary[child] >= last_data) break;
-			hp.ary[parent] = hp.ary[child];
+	if (!empty(heap)) {
+		ret = heap->buffer[1];
+		int parent = 1, child = 2, last_pushed_value = heap->buffer[(heap->count)--];
+		while (child <= heap->count) {
+			if (child < heap->count && heap->buffer[child] > heap->buffer[child + 1]) {
+				++child;
+			}
+			if (heap->buffer[child] >= last_pushed_value) {
+				break;
+			}
+			heap->buffer[parent] = heap->buffer[child];
 			parent = child;
 			child <<= 1;
 		}
-		hp.ary[parent] = last_data;
+		heap->buffer[parent] = last_pushed_value;
 	}
 	return ret;
 }
 
-int main(void)
+int main()
 {
-	int n, x;
-	scanf("%d", &n);
+	Heap* heap = create_heap();
 
+	int n;
+	scanf("%d", &n);
 	while (n--) {
+		int x;
 		scanf("%d", &x);
-		if (x) push(x);
-		else printf("%d\n", pop());
+		if (!x) {
+			printf("%d\n", pop(heap));
+		}
+		else {
+			push(heap, x);
+		}
 	}
 
-	return 0;
+	delete_heap(heap);
 }
