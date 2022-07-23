@@ -1,80 +1,86 @@
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
-#define N 10000 + 5
-
-#define true 1
-#define false 0
-
-char str[N][11];
+#define TRUE 1
+#define FALSE 0
 
 typedef struct _Trie Trie;
 
 struct _Trie {
-	int finish;
+
 	Trie* next[10];
+
+	int end;
 };
 
-Trie* trie() {
-	Trie* tp = (Trie*)malloc(sizeof(Trie));
+Trie* create_trie() {
+
+	Trie* trie = (Trie*)malloc(sizeof(Trie));
+	memset(trie, 0, sizeof(Trie));
+
+	return trie;
+}
+
+void delete_trie(Trie* trie) {
+
 	int i;
-	for (i = 0; i < 10; ++i) tp->next[i] = NULL;
-	tp->finish = false;
-	return tp;
-}
-
-void _trie(Trie* t) {
-	int i;
-	for (i = 0; i < 10; ++i) if (t->next[i]) {
-		_trie(t->next[i]);
-		free(t->next[i]);
+	for (i = 0; i < 10; ++i) {
+		if (trie->next[i]) {
+			delete_trie(trie->next[i]);
+		}
 	}
+	free(trie);
+	trie = NULL;
 }
 
-void insert(Trie* t, const char* key) {
-	if (*key == '\0') {
-		t->finish = true;
-		return;
+int insert(Trie* trie, const char* str) {
+	if (!(*str)) {
+		return trie->end = TRUE;
 	}
-	int cur = *key - '0';
-	if (t->next[cur] == NULL) t->next[cur] = trie();
-	insert(t->next[cur], key + 1);
+
+	Trie** next = &trie->next[*str - '0'];
+	if (!(*next)) {
+		*next = create_trie();
+	}
+	insert(*next, str + 1);
 }
 
-int find(Trie* t, const char* key) {
-	if (*key == '\0') return 0;
-	if (t->finish) return 1;
-	int cur = *key - '0';
-	return find(t->next[cur], key + 1);
+int find(Trie* trie, const char* str) {
+	if (!(*str)) {
+		return TRUE;
+	}
+
+	if (trie->end) {
+		return FALSE;
+	}
+
+	return find(trie->next[*str - '0'], str + 1);
 }
 
-int main(void)
+char str[10000 + 5][10 + 5];
+
+int main()
 {
-	int tc, test_case, i, n, flg;
+	int tc;
 	scanf("%d", &tc);
+	while (tc--) {
+		Trie* trie = create_trie();
 
-	for (test_case = 0; test_case < tc; ++test_case) {
-		Trie* tri = trie();
-
+		int n;
 		scanf("%d", &n);
 
+		int i;
 		for (i = 0; i < n; ++i) {
 			scanf("%s", str[i]);
-			insert(tri, str[i]);
+			insert(trie, str[i]);
 		}
 
-		flg = 0;
-
+		int ans = TRUE;
 		for (i = 0; i < n; ++i) {
-			if (find(tri, str[i])) {
-				flg = true;
-			}
+			ans &= find(trie, str[i]);
 		}
+		printf("%s\n", ans ? "YES" : "NO");
 
-		puts(!flg ? "YES" : "NO");
-
-		_trie(tri);
+		delete_trie(trie);
 	}
-
-	return 0;
 }
