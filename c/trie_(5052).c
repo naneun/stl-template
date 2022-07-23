@@ -30,7 +30,7 @@ void delete_trie(Trie* trie) {
 		}
 	}
 	free(trie);
-	trie = NULL;
+	*(&trie) = NULL;
 }
 
 int insert(Trie* trie, const char* str) {
