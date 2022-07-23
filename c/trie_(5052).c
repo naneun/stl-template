@@ -42,7 +42,8 @@ int insert(Trie* trie, const char* str) {
 	if (!(*next)) {
 		*next = create_trie();
 	}
-	insert(*next, str + 1);
+
+	return insert(*next, str + 1);
 }
 
 int find(Trie* trie, const char* str) {
