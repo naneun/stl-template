@@ -11,10 +11,7 @@ public:
 	int index;
 	string value;
 
-	Element() {
-		value = "";
-		index = 0;
-	}
+	Element() : value(""), index(0) {}
 
 	Element(string value, int index) : value(value), index(index) {}
 
