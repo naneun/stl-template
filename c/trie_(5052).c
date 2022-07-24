@@ -27,6 +27,7 @@ int main()
 	scanf("%d", &tc);
 	while (tc--) {
 		Trie* trie = create_trie();
+		
 		int n;
 		scanf("%d", &n);
 

@@ -29,6 +29,7 @@ int main()
 	while (n--) {
 		int x;
 		scanf("%d", &x);
+		
 		if (!x) {
 			printf("%d\n", pop(heap));
 		}

@@ -76,6 +76,7 @@ int main()
 		for (i = 0; i < n; ++i) {
 			ans &= trie->find(str[i]);
 		}
+		
 		cout << (ans ? "YES\n" : "NO\n");
 
 		trie->delete_trie();

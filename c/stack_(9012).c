@@ -28,6 +28,7 @@ int main()
 	scanf("%d", &tc);
 	while (tc--) {
 		Stack* stack = create_stack();
+		
 		char str[STRING_LENGTH];
 		scanf("%s", str);
 
