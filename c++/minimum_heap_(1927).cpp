@@ -4,16 +4,12 @@ using namespace std;
 
 const int HEAP_SIZE = 100'000 + 5;
 
-struct Heap {
-
+class Heap {
 private:
-
 	int count;
-	
 	int* buffer;
 
 public:
-
 	Heap() {
 		count = 0;
 		buffer = new int[HEAP_SIZE];
@@ -68,7 +64,7 @@ public:
 
 int main()
 {
-	ios::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	Heap* heap = new Heap();
@@ -78,6 +74,7 @@ int main()
 	while (n--) {
 		int x;
 		cin >> x;
+
 		if (!x) {
 			cout << heap->pop() << '\n';
 		}

@@ -6,19 +6,17 @@
 typedef struct _Heap Heap;
 
 struct _Heap {
-
 	int count;
-
 	int* buffer;
 };
 
+/*
+* Maximum-Heap
+*/
 Heap* create_heap();
 void delete_heap(Heap* heap);
-
 int empty(Heap* heap);
-
 int top(Heap* heap);
-
 void push(Heap* heap, int value);
 int pop(Heap* heap);
 

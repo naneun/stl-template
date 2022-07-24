@@ -7,20 +7,19 @@
 typedef struct _Trie Trie;
 
 struct _Trie {
-
 	Trie* next[10];
-
 	int end;
 };
 
+char str[10000 + 5][10 + 5];
+
+/*
+* Trie
+*/
 Trie* create_trie();
 void delete_trie(Trie* trie);
-
 int insert(Trie* trie, const char* str);
-
 int find(Trie* trie, const char* str);
-
-char str[10000 + 5][10 + 5];
 
 int main()
 {
@@ -28,7 +27,6 @@ int main()
 	scanf("%d", &tc);
 	while (tc--) {
 		Trie* trie = create_trie();
-
 		int n;
 		scanf("%d", &n);
 
@@ -42,6 +40,7 @@ int main()
 		for (i = 0; i < n; ++i) {
 			ans &= find(trie, str[i]);
 		}
+
 		printf("%s\n", ans ? "YES" : "NO");
 
 		delete_trie(trie);

@@ -6,39 +6,41 @@
 #define NODE_COUNT (10000 + 5)
 
 typedef struct _Vector Vector;
+typedef struct _Graph Graph;
 
 struct _Vector {
-
 	int size;
 	int capacity;
-
 	int* buffer;
 };
 
-Vector* create_vector();
-void resize_vector(Vector* vector);
-void delete_vector(Vector* vector);
-
-int empty(Vector* vector);
-int full(Vector* vector);
-
-int size(Vector* vector);
-
-void emplace_back(Vector* vector, int value);
-void pop_back(Vector* vector);
-
-typedef struct _Graph Graph;
-
 struct _Graph {
-
 	Vector** nodes;
 };
 
+int visited[NODE_COUNT];
+
+/*
+* Vector
+*/
+Vector* create_vector();
+void resize_vector(Vector* vector);
+void delete_vector(Vector* vector);
+int empty(Vector* vector);
+int full(Vector* vector);
+int size(Vector* vector);
+void emplace_back(Vector* vector, int value);
+void pop_back(Vector* vector);
+
+/*
+* Graph
+*/
 Graph* create_graph();
 void delete_graph(Graph* graph);
 
-int visited[NODE_COUNT];
-
+/*
+* DFS
+*/
 void dfs(Graph* graph, int cur);
 
 int main()

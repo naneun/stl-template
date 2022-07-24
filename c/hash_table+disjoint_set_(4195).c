@@ -10,42 +10,42 @@
 #define STRING_LENGTH (20 + 5)
 
 typedef unsigned long long ull;
-
-int strcmp(const char* s1, const char* s2);
-void strcpy(char* s1, const char* s2);
-
 typedef struct _Element Element;
+typedef struct _HashTable HashTable;
 
 struct _Element {
-
 	char* value;
 	int index;
 };
 
-typedef struct _HashTable HashTable;
-
 struct _HashTable {
-
 	Element* element;
 };
 
 HashTable hash_table;
 
-void init_hash_table();
-
-ull generate_hash_value(const char* str);
-
-void put(const char* str, int seq);
-void put_element(const ull hash_value, const char* str, const int seq);
-
-Element find(const char* str);
-
 int seq, parent[HASH_TABLE_SIZE];
 
+/*
+* String Utils
+*/
+int strcmp(const char* s1, const char* s2);
+void strcpy(char* s1, const char* s2);
+
+/*
+* HashTable
+*/
+void init_hash_table();
+ull generate_hash_value(const char* str);
+void put(const char* str, int seq);
+void put_element(const ull hash_value, const char* str, const int seq);
+Element find(const char* str);
+
+/*
+* Disjoint-Set
+*/
 void init_set();
-
 int find_root(int x);
-
 void merge(int x, int y);
 
 int main()
@@ -57,10 +57,13 @@ int main()
 	while (tc--) {
 		int n;
 		scanf("%d", &n);
+
 		init_set();
+		
 		while (n--) {
 			char s[STRING_LENGTH], t[STRING_LENGTH];
 			scanf("%s %s", s, t);
+			
 			if (find(s).value == NULL) {
 				put(s, ++seq);
 			}
@@ -74,7 +77,7 @@ int main()
 			int u = find_root(e1.index);
 			int v = find_root(e2.index);
 
-			if (u > v) {
+			if (u < v) {
 				swap(u, v);
 			}
 
@@ -157,7 +160,6 @@ Element find(const char* str) {
 
 void init_set() {
 	seq = 0;
-
 	int i;
 	for (i = 1; i < HASH_TABLE_SIZE; ++i) {
 		parent[i] = -1;
@@ -172,7 +174,7 @@ int find_root(int x) {
 }
 
 void merge(int x, int y) {
-	if (x > y) {
+	if (x < y) {
 		swap(x, y);
 	}
 	parent[x] += parent[y];

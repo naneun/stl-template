@@ -4,12 +4,10 @@ using namespace std;
 
 typedef unsigned long long ull;
 
-const int HASH_TABLE_SIZE = 1000'000 + 5;
+const int HASH_TABLE_SIZE = 1'000'000 + 5;
 
-struct Element {
-
+class Element {
 public:
-
 	string value;
 	int index;
 
@@ -25,19 +23,14 @@ public:
 	}
 };
 
-Element NULL_ELEMENT;
+const Element NULL_ELEMENT;
 
 struct HashTable {
-
 private:
-
 	Element element[HASH_TABLE_SIZE];
 
 public:
-
-	HashTable() {
-
-	}
+	HashTable() {}
 
 	ull generate_hash_value(string str) {
 		ull hash_value = 5381;
@@ -76,33 +69,16 @@ HashTable hash_table;
 
 int seq, parent[HASH_TABLE_SIZE];
 
-void init_set() {
-	seq = 0;
-
-	int i;
-	for (i = 1; i < HASH_TABLE_SIZE; ++i) {
-		parent[i] = -1;
-	}
-}
-
-int find_root(int x) {
-	if (parent[x] < 0) {
-		return x;
-	}
-	return parent[x] = find_root(parent[x]);
-}
-
-void merge(int x, int y) {
-	if (x > y) {
-		swap(x, y);
-	}
-	parent[x] += parent[y];
-	parent[y] = x;
-}
+/*
+* Disjoint-Set
+*/
+void init_set();
+int find_root(int x);
+void merge(int x, int y);
 
 int main()
 {
-	ios::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	int tc;
@@ -110,10 +86,13 @@ int main()
 	while (tc--) {
 		int n;
 		cin >> n;
+
 		init_set();
+		
 		while (n--) {
 			string s, t;
 			cin >> s >> t;
+
 			if (hash_table.find(s) == NULL_ELEMENT) {
 				hash_table.put(s, ++seq);
 			}
@@ -138,4 +117,27 @@ int main()
 			cout << -parent[u] << '\n';
 		}
 	}
+}
+
+void init_set() {
+	seq = 0;
+	int i;
+	for (i = 1; i < HASH_TABLE_SIZE; ++i) {
+		parent[i] = -1;
+	}
+}
+
+int find_root(int x) {
+	if (parent[x] < 0) {
+		return x;
+	}
+	return parent[x] = find_root(parent[x]);
+}
+
+void merge(int x, int y) {
+	if (x > y) {
+		swap(x, y);
+	}
+	parent[x] += parent[y];
+	parent[y] = x;
 }

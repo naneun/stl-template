@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int MAX_N = 1000000 + 5;
+const int MAX_N = 1'000'000 + 5;
 
 int n, arr[MAX_N], brr[MAX_N];
 

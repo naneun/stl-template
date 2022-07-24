@@ -4,16 +4,13 @@ using namespace std;
 
 typedef unsigned long long ull;
 
-const int HASH_TABLE_SIZE = 1000'000 + 5;
+const int HASH_TABLE_SIZE = 1'000'000 + 5;
 
-struct HashTable {
-
+class HashTable {
 private:
-
 	string value[HASH_TABLE_SIZE];
 
 public:
-
 	ull generate_hash_value(string str) {
 		ull hash_value = 5381;
 		for (int i = 0; str[i]; ++i) {
@@ -51,7 +48,7 @@ HashTable hash_table;
 
 int main()
 {
-	ios::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	int n, m;
@@ -68,5 +65,6 @@ int main()
 		cin >> s;
 		ans += hash_table.find(s);
 	}
+	
 	cout << ans;
 }

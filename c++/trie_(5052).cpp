@@ -2,16 +2,12 @@
 
 using namespace std;
 
-struct Trie {
-
+class Trie {
 private:
-
 	Trie* next[10];
-
 	int end;
 
 public:
-
 	Trie() {
 		int i;
 		for (i = 0; i < 10; ++i) {
@@ -55,11 +51,11 @@ public:
 	}
 };
 
-char str[10000 + 5][10 + 5];
+char str[10'000 + 5][10 + 5];
 
 int main()
 {
-	ios::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 
 	int tc;

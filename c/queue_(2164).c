@@ -6,22 +6,20 @@
 typedef struct _Queue Queue;
 
 struct _Queue {
-
 	int front;
 	int back;
-
 	int* buffer;
 };
 
+/*
+* Queue
+*/
 Queue* create_queue();
 void delete_queue(Queue* queue);
-
 int empty(Queue* queue);
 int full(Queue* queue);
-
 int size(Queue* queue);
 int front(Queue* queue);
-
 void push(Queue* queue, int value);
 void pop(Queue* queue);
 

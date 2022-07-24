@@ -3,7 +3,9 @@
 
 using namespace std;
 
-int n, arr[1000000 + 5];
+const int MAX_N = 1'000'000 + 5;
+
+int n, arr[MAX_N];
 
 void quick_sort(int start, int end) {
 	if (start >= end) {

@@ -2,7 +2,7 @@
 
 ## MyTemplate
 
-#### This template was made by myself.
+#### This template code was written by me.
 
 - ### Stack
     - [C code](https://github.com/naneun/datastructure-template/blob/master/c/stack_(9012).c)

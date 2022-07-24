@@ -8,25 +8,26 @@
 #define STRING_LENGTH (500 + 5)
 
 typedef unsigned long long ull;
-
-int strcmp(const char* s1, const char* s2);
-void strcpy(char* s1, const char* s2);
-
 typedef struct _HashTable HashTable;
 
 struct _HashTable {
-
 	char* value[HASH_TABLE_SIZE];
 };
 
 HashTable hash_table;
 
+/*
+* String Utils
+*/
+int strcmp(const char* s1, const char* s2);
+void strcpy(char* s1, const char* s2);
+
+/*
+* HashTable
+*/
 void init_hash_table();
-
 ull generate_hash_value(const char* str);
-
 void put(const char* str);
-
 int find(const char* str);
 
 int main()
@@ -47,6 +48,7 @@ int main()
 		scanf("%s", s);
 		ans += find(s);
 	}
+	
 	printf("%d", ans);
 }
 

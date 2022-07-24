@@ -7,20 +7,18 @@
 typedef struct _Stack Stack;
 
 struct _Stack {
-
 	int top;
-
 	char* buffer;
 };
 
+/*
+* Stack
+*/
 Stack* create_stack();
 void delete_stack(Stack* stack);
-
 int empty(Stack* stack);
-
 int size(Stack* stack);
 char top(Stack* stack);
-
 void push(Stack* stack, char ch);
 void pop(Stack* stack);
 
@@ -44,6 +42,7 @@ int main()
 				pop(stack);
 			}
 		}
+		
 		printf("%s\n", empty(stack) ? "YES" : "NO");
 
 		delete_stack(stack);
