@@ -15,7 +15,7 @@ struct _Stack {
 * Stack
 */
 Stack* create_stack();
-void delete_stack(Stack* stack);
+void delete_stack(Stack** stack);
 int empty(Stack* stack);
 int size(Stack* stack);
 char top(Stack* stack);
@@ -46,7 +46,7 @@ int main()
 		
 		printf("%s\n", empty(stack) ? "YES" : "NO");
 
-		delete_stack(stack);
+		delete_stack(&stack);
 	}
 }
 
@@ -57,9 +57,9 @@ Stack* create_stack() {
 	return stack;
 }
 
-void delete_stack(Stack* stack) {
-	free(stack);
-	*(&stack) = NULL;
+void delete_stack(Stack** stack) {
+	free(*stack);
+	*stack = NULL;
 }
 
 int empty(Stack* stack) {

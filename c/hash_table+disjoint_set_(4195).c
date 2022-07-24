@@ -14,8 +14,8 @@ typedef struct _Element Element;
 typedef struct _HashTable HashTable;
 
 struct _Element {
-	char* value;
 	int index;
+	char* value;
 };
 
 struct _HashTable {

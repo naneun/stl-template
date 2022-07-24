@@ -15,7 +15,7 @@ struct _Queue {
 * Queue
 */
 Queue* create_queue();
-void delete_queue(Queue* queue);
+void delete_queue(Queue** queue);
 int empty(Queue* queue);
 int full(Queue* queue);
 int size(Queue* queue);
@@ -43,7 +43,7 @@ int main()
 
 	printf("%d", front(queue));
 
-	delete_queue(queue);
+	delete_queue(&queue);
 }
 
 Queue* create_queue() {
@@ -53,10 +53,10 @@ Queue* create_queue() {
 	return queue;
 }
 
-void delete_queue(Queue* queue) {
-	free(queue->buffer);
-	free(queue);
-	*(&queue) = NULL;
+void delete_queue(Queue** queue) {
+	free((*queue)->buffer);
+	free(*queue);
+	*queue = NULL;
 }
 
 int empty(Queue* queue) {

@@ -8,8 +8,8 @@ const int HASH_TABLE_SIZE = 1'000'000 + 5;
 
 class Element {
 public:
-	string value;
 	int index;
+	string value;
 
 	Element() {
 		value = "";

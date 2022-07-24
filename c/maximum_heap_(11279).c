@@ -14,7 +14,7 @@ struct _Heap {
 * Maximum-Heap
 */
 Heap* create_heap();
-void delete_heap(Heap* heap);
+void delete_heap(Heap** heap);
 int empty(Heap* heap);
 int top(Heap* heap);
 void push(Heap* heap, int value);
@@ -38,7 +38,7 @@ int main()
 		}
 	}
 
-	delete_heap(heap);
+	delete_heap(&heap);
 }
 
 Heap* create_heap() {
@@ -48,10 +48,10 @@ Heap* create_heap() {
 	return heap;
 }
 
-void delete_heap(Heap* heap) {
-	free(heap->buffer);
-	free(heap);
-	*(&heap) = NULL;
+void delete_heap(Heap** heap) {
+	free((*heap)->buffer);
+	free(*heap);
+	*heap = NULL;
 }
 
 int empty(Heap* heap) {

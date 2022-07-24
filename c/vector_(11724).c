@@ -25,7 +25,7 @@ int visited[NODE_COUNT];
 */
 Vector* create_vector();
 void resize_vector(Vector* vector);
-void delete_vector(Vector* vector);
+void delete_vector(Vector** vector);
 int empty(Vector* vector);
 int full(Vector* vector);
 int size(Vector* vector);
@@ -36,7 +36,7 @@ void pop_back(Vector* vector);
 * Graph
 */
 Graph* create_graph();
-void delete_graph(Graph* graph);
+void delete_graph(Graph** graph);
 
 /*
 * DFS
@@ -66,7 +66,7 @@ int main()
 
 	printf("%d", ans);
 
-	delete_graph(graph);
+	delete_graph(&graph);
 }
 
 Vector* create_vector() {
@@ -82,10 +82,10 @@ void resize_vector(Vector* vector) {
 	vector->buffer = (int*)realloc(vector->buffer, sizeof(int) * vector->capacity);
 }
 
-void delete_vector(Vector* vector) {
-	free(vector->buffer);
-	free(vector);
-	*(&vector) = NULL;
+void delete_vector(Vector** vector) {
+	free((*vector)->buffer);
+	free(*vector);
+	*vector = NULL;
 }
 
 int size(Vector* vector) {
@@ -124,13 +124,13 @@ Graph* create_graph() {
 	return graph;
 }
 
-void delete_graph(Graph* graph) {
+void delete_graph(Graph** graph) {
 	int i;
 	for (i = 0; i < NODE_COUNT; ++i) {
-		delete_vector(*(graph->nodes + i));
+		delete_vector((*graph)->nodes + i);
 	}
-	free(graph);
-	*(&graph) = NULL;
+	free(*graph);
+	*graph = NULL;
 }
 
 void dfs(Graph* graph, int cur) {
