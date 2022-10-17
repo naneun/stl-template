@@ -2,86 +2,65 @@
 
 using namespace std;
 
-const int HEAP_SIZE = 100'000 + 5;
+const int MAX_HEAP_SIZE = 100'000 + 5;
 
-class Heap {
-private:
-	int count;
-	int* buffer;
+int heap[MAX_HEAP_SIZE];
 
-public:
-	Heap() {
-		count = 0;
-		buffer = new int[HEAP_SIZE];
-	}
+int heap_size;
 
-	~Heap() {
-		delete(buffer);
-	}
+void push(int x) {
+    heap[++heap_size] = x;
+    int cur = heap_size;
+    while (cur != 1 && heap[cur / 2] < heap[cur]) {
+        swap(heap[cur / 2], heap[cur]);
+        cur /= 2;
+    }
+}
 
-	bool empty() {
-		return count == 0;
-	}
+int pop() {
+    if (heap_size == 0) {
+        return 0;
+    }
 
-	int top() {
-		int ret = 0;
-		if (!empty()) {
-			return buffer[1];
-		}
-		return ret;
-	}
+    int ret = heap[1];
+    heap[1] = heap[heap_size--];
 
-	void push(int value) {
-		int cur = ++count;
-		while (cur != 1 && value > buffer[cur >> 1]) {
-			buffer[cur] = buffer[cur >> 1];
-			cur >>= 1;
-		}
-		buffer[cur] = value;
-	}
+    int cur = 1;
+    while (cur * 2 <= heap_size) {
+        int next = cur * 2;
+        if (next < heap_size
+            && heap[next + 1] > heap[next]) {
 
-	int pop() {
-		int ret = 0;
-		if (!empty()) {
-			ret = buffer[1];
-			int parent = 1, child = 2, last_pushed_value = buffer[count--];
-			while (child <= count) {
-				if (child < count && buffer[child] < buffer[child + 1]) {
-					++child;
-				}
-				if (buffer[child] <= last_pushed_value) {
-					break;
-				}
-				buffer[parent] = buffer[child];
-				parent = child;
-				child <<= 1;
-			}
-			buffer[parent] = last_pushed_value;
-		}
-		return ret;
-	}
-};
+            next += 1;
+        }
+
+        if (heap[cur] >= heap[next]) {
+            break;
+        }
+
+        swap(heap[cur], heap[next]);
+        cur = next;
+    }
+
+    return ret;
+}
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-	Heap* heap = new Heap();
+    int n;
+    cin >> n;
 
-	int n;
-	cin >> n;
-	while (n--) {
-		int x;
-		cin >> x;
-
-		if (!x) {
-			cout << heap->pop() << '\n';
-		}
-		else {
-			heap->push(x);
-		}
-	}
-
-	delete(heap);
+    int i, x;
+    for (i = 0; i < n; ++i) {
+        cin >> x;
+        if (x > 0) {
+            push(x);
+        }
+        else {
+            cout << pop() << '\n';
+        }
+    }
 }
